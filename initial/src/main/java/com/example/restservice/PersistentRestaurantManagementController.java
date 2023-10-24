@@ -16,7 +16,7 @@ public class PersistentRestaurantManagementController {
     @PostMapping("/v2/restaurants")
     public ResponseEntity<ResourceResponse> createRestaurant(@RequestBody Restaurant restaurant) {
         ResourceResponse resp = new ResourceResponse();
-        if(restaurant == null || restaurant.getName() == null || restaurant.getName().isEmpty()) {
+        if (restaurant == null || restaurant.getName() == null || restaurant.getName().isEmpty()) {
             resp.setMessage("Invalid Input");
             return ResponseEntity.badRequest().body(resp);
         }
@@ -28,13 +28,28 @@ public class PersistentRestaurantManagementController {
 
     @GetMapping("/v2/restaurants/{id}")
     public ResponseEntity<Restaurant> getRestaurant(@PathVariable Integer id) {
-        if(id == null || id < 0){
+        if (id == null || id < 0) {
             return ResponseEntity.badRequest().build();
         }
         Restaurant restaurant = restaurantService.getRestaurant(id);
-        if(restaurant == null) {
+        if (restaurant == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(restaurant);
     }
+
+    @DeleteMapping("/v2/restaurants/{id}")
+    public ResponseEntity<ResourceResponse> deleteRestaurant(@PathVariable Integer id) {
+        ResourceResponse resp = new ResourceResponse();
+        if (id == null || id < 0) {
+            resp.setMessage("id is invalid");
+            return ResponseEntity.badRequest().body(resp);
+        }
+        boolean deleted = restaurantService.deleteRestaurant(id);
+        if (!deleted) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
 }

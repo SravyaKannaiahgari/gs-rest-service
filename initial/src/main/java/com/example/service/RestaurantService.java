@@ -4,9 +4,11 @@ import com.example.mappers.RestaurantMapper;
 import com.example.model.entity.Item;
 import com.example.model.entity.Restaurant;
 import com.example.model.entity.RestaurantItemMapping;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,5 +40,17 @@ public class RestaurantService {
         }
         restaurant.setMenu(menu);
         return restaurant;
+    }
+    public boolean deleteRestaurant(Integer id) {
+        List<RestaurantItemMapping> menuItemMappings = restaurantMapper.getRestaurantToItemMappings(id);
+        for(RestaurantItemMapping itemMapping: menuItemMappings) {
+            restaurantMapper.deleteItem(itemMapping.getItemId());
+            restaurantMapper.deleteRestaurantItemMapping(itemMapping.getRestaurantId(), itemMapping.getItemId());
+        }
+        Integer rowCount = restaurantMapper.deleteRestaurant(id);
+        if(rowCount == 0) {
+            return  false;
+        }
+        return true;
     }
 }
