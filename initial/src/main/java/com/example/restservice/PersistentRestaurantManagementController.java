@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 public class PersistentRestaurantManagementController {
 
@@ -37,6 +40,14 @@ public class PersistentRestaurantManagementController {
         }
         return ResponseEntity.ok(restaurant);
     }
+
+    @GetMapping("/v2/restaurants")
+    public ResponseEntity<List<Restaurant>> getRestaurants() {
+        List<Restaurant> allRestaurants = restaurantService.getRestaurants();
+        return ResponseEntity.ok(allRestaurants);
+    }
+
+
 
     @DeleteMapping("/v2/restaurants/{id}")
     public ResponseEntity<ResourceResponse> deleteRestaurant(@PathVariable Integer id) {

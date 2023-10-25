@@ -36,10 +36,30 @@ public class RestaurantService {
         List<RestaurantItemMapping> menuItemMappings = restaurantMapper.getRestaurantToItemMappings(restaurant.getId());
         List<Item> menu = new ArrayList<>();
         for(RestaurantItemMapping itemMapping: menuItemMappings) {
-            menu.add(restaurantMapper.getMenuItem(itemMapping.getItemId()));
+            Integer itemId = itemMapping.getItemId();
+            Item item = restaurantMapper.getMenuItem(itemId);
+            menu.add(item);
         }
         restaurant.setMenu(menu);
         return restaurant;
+    }
+
+    public List<Restaurant> getRestaurants() {
+        List<Restaurant> restaurants = restaurantMapper.getRestaurants();
+        if(restaurants == null) {
+            return null;
+        }
+        for(Restaurant restaurant : restaurants){
+            List<RestaurantItemMapping> menuItemMappings = restaurantMapper.getRestaurantToItemMappings(restaurant.getId());
+            List<Item> menu = new ArrayList<>();
+            for(RestaurantItemMapping itemMapping: menuItemMappings) {
+                Integer itemId = itemMapping.getItemId();
+                Item item = restaurantMapper.getMenuItem(itemId);
+                menu.add(item);
+            }
+            restaurant.setMenu(menu);
+        }
+        return restaurants;
     }
     public boolean deleteRestaurant(Integer id) {
         List<RestaurantItemMapping> menuItemMappings = restaurantMapper.getRestaurantToItemMappings(id);

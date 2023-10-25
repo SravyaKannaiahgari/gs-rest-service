@@ -57,4 +57,15 @@ public interface RestaurantMapper {
 
     @Select("Select last_insert_id()")
     public Integer getLastInsertId();
+
+    @Select(
+            "Select id, name, cuisine from Restaurant")
+    @Results(value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "name", column = "name"),
+            @Result(property=  "cuisine", column = "cuisine"),
+    })
+    public List<Restaurant> getRestaurants();
+
+
 }
